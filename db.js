@@ -20,7 +20,7 @@ export async function connectToDB() {
     process.exit(1);
   }
 }
-
+// Function to get the database instance
 export function getDB() {
   if (!db) {
     throw new Error("Database not initialized. Call connectToDB() first.");
