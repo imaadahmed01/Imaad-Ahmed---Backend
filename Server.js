@@ -16,16 +16,12 @@ app.use((req, res, next) => {
   next();
 });
 
-// =======================
 // ROOT
-// =======================
 app.get("/", (req, res) => {
   res.json({ status: "OK", message: "Lesson API running" });
 });
 
-// =======================
 // GET /lessons
-// =======================
 app.get("/lessons", async (req, res) => {
   try {
     const lessons = await getDB().collection("Lessons").find().toArray();
@@ -36,35 +32,7 @@ app.get("/lessons", async (req, res) => {
   }
 });
 
-// =======================
-// GET /search?q=term
-// =======================
-app.get("/search", async (req, res) => {
-  const q = req.query.q;
 
-  if (!q || q.trim() === "") {
-    return res.json([]);
-  }
-
-  const regex = new RegExp(q, "i");
-
-  try {
-    const results = await getDB()
-      .collection("Lessons")
-      .find({
-        $or: [
-          { subject: regex },
-          { location: regex }
-        ]
-      })
-      .toArray();
-
-    res.json(results);
-  } catch (err) {
-    console.error("Search error:", err);
-    res.status(500).json({ error: "Search failed" });
-  }
-});
 
 // =======================
 // POST /order
@@ -94,9 +62,7 @@ app.post("/order", async (req, res) => {
 });
 
 
-// =======================
-// PUT /lesson/:id
-// =======================
+
 app.put("/lesson/:id", async (req, res) => {
   const id = req.params.id;
   const updateData = req.body;
@@ -105,13 +71,13 @@ app.put("/lesson/:id", async (req, res) => {
   console.log("   id   =", id);
   console.log("   body =", updateData);
 
-  // 1) Check ID format
+  
   if (!ObjectId.isValid(id)) {
     console.log("❌ Invalid ObjectId format");
     return res.status(400).json({ error: "Invalid lesson ID format" });
   }
 
-  // 2) Check body not empty
+  
   if (!updateData || Object.keys(updateData).length === 0) {
     console.log("❌ Empty update body");
     return res.status(400).json({ error: "No update fields provided" });
@@ -119,7 +85,7 @@ app.put("/lesson/:id", async (req, res) => {
 
   try {
     const result = await getDB()
-      .collection("Lessons") // capital L — matches MongoDB
+      .collection("Lessons") 
       .updateOne(
         { _id: new ObjectId(id) },
         { $set: updateData }
@@ -139,9 +105,7 @@ app.put("/lesson/:id", async (req, res) => {
   }
 });
 
-// =======================
-// START SERVER
-// =======================
+
 connectToDB().then(() => {
   app.listen(PORT, () => {
     console.log(`🚀 Server running on http://localhost:${PORT}`);
