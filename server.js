@@ -32,18 +32,11 @@ app.get("/lessons", async (req, res) => {
   }
 });
 
-
-
-// =======================
 // POST /order
-// =======================
-// =======================
-// POST /order
-// =======================
 app.post("/order", async (req, res) => {
   const order = req.body;
 
-  // Simple basic validation (optional but nice for coursework)
+  
   if (!order || !order.name || !order.phone || !Array.isArray(order.items)) {
     return res.status(400).json({ error: "Invalid order data" });
   }
@@ -60,8 +53,6 @@ app.post("/order", async (req, res) => {
     res.status(500).json({ error: "Failed to create order" });
   }
 });
-
-
 
 app.put("/lesson/:id", async (req, res) => {
   const id = req.params.id;
